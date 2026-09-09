@@ -1,0 +1,79 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        0,
+        0
+      ],
+      "id": "01e6d459-f889-485c-bba5-b47318fc10b1",
+      "name": "Telegram Trigger",
+      "webhookId": "058c5270-71cc-49fc-a476-ecc0cba55f82",
+      "credentials": {
+        "telegramApi": {
+          "id": "AStVQa8OEdzD2Hp3",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.message.chat.id }}",
+        "text": "=Привет, {{ $json.message.from.first_name }}! Ты написал: {{ $json.message.text }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        192,
+        0
+      ],
+      "id": "6f6dea4f-b0fe-494f-8eea-4fd4e776888f",
+      "name": "Send a text message",
+      "webhookId": "88f60018-4b59-464f-8c9b-7e9cc705e149",
+      "credentials": {
+        "telegramApi": {
+          "id": "AStVQa8OEdzD2Hp3",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "f759ec3c-a744-477c-b861-9b71ede0fe6a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "791b066fb252c2029ef4f28e2cbb900699ca207b962b4d7005c8f353a8d043ab"
+  },
+  "nodeGroups": [],
+  "id": "GAClwgbRLFruHPQu",
+  "tags": []
+}
