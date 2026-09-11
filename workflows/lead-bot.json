@@ -1,0 +1,104 @@
+{
+  "name": "Lead Bot",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        0,
+        0
+      ],
+      "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "name": "Telegram Trigger",
+      "webhookId": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+      "credentials": {
+        "telegramApi": {
+          "id": "AStVQa8OEdzD2Hp3",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.message.chat.id }}",
+        "text": "=Здравствуйте, {{ $json.message.from.first_name }}! Спасибо за заявку — мы получили её и свяжемся с вами в ближайшее время.",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        220,
+        -120
+      ],
+      "id": "c3d4e5f6-a7b8-9012-cdef-123456789012",
+      "name": "Ответить клиенту",
+      "webhookId": "d4e5f6a7-b8c9-0123-def1-234567890123",
+      "credentials": {
+        "telegramApi": {
+          "id": "AStVQa8OEdzD2Hp3",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "779089235",
+        "text": "=🔔 Новая заявка\n\nИмя: {{ $json.message.from.first_name }}{{ $json.message.from.last_name ? ' ' + $json.message.from.last_name : '' }}\nUsername: {{ $json.message.from.username ? '@' + $json.message.from.username : '—' }}\nChat ID: {{ $json.message.from.id }}\n\nСообщение:\n{{ $json.message.text }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        220,
+        120
+      ],
+      "id": "e5f6a7b8-c9d0-1234-ef12-345678901234",
+      "name": "Уведомить админа",
+      "webhookId": "f6a7b8c9-d0e1-2345-f123-456789012345",
+      "credentials": {
+        "telegramApi": {
+          "id": "AStVQa8OEdzD2Hp3",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Ответить клиенту",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Уведомить админа",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}
