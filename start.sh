@@ -36,8 +36,10 @@ sleep 1
 disown
 echo "жду URL..."
 URL=""
-for i in $(seq 1 20); do
-  URL=$(grep -oE 'https://[a-z0-9-]+\.trycloudflare\.com' "$CF_LOG" 2>/dev/null | head -1)
+for i in $(seq 1 30); do
+  # ищем именно quick-tunnel вида foo-bar-baz.trycloudflare.com (минимум один дефис в поддомене),
+  # чтобы не подхватить служебный api.trycloudflare.com
+  URL=$(grep -oE 'https://[a-z0-9-]+-[a-z0-9-]+\.trycloudflare\.com' "$CF_LOG" 2>/dev/null | head -1)
   [ -n "$URL" ] && break
   sleep 1
 done
@@ -50,15 +52,11 @@ echo "URL: $URL"
 
 echo
 echo "=== 3/5. .env ==="
-python3 - <<PY
-import re, pathlib
-p = pathlib.Path("$ENV_FILE")
-text = p.read_text() if p.exists() else ""
-lines = [l for l in text.splitlines() if not l.startswith("WEBHOOK_URL=")]
-lines.append(f"WEBHOOK_URL=$URL/")
-p.write_text("\n".join(lines) + "\n")
-print("WEBHOOK_URL записан")
-PY
+# без heredoc-подставнок, чистый bash — надёжнее
+grep -v '^WEBHOOK_URL=' "$ENV_FILE" > "$ENV_FILE.tmp"
+echo "WEBHOOK_URL=${URL}/" >> "$ENV_FILE.tmp"
+mv "$ENV_FILE.tmp" "$ENV_FILE"
+echo "WEBHOOK_URL=${URL}/ записан"
 
 echo
 echo "=== 4/5. n8n ==="
